@@ -1,4 +1,4 @@
-﻿___TERMS_OF_SERVICE___
+___TERMS_OF_SERVICE___
 
 By creating or modifying this file you agree to Google Tag Manager's Community
 Template Gallery Developer Terms of Service available at
@@ -111,7 +111,7 @@ ___TEMPLATE_PARAMETERS___
         "type": "POSITIVE_NUMBER"
       }
     ],
-    "help": "In this field, input the index of the page path level you would like to return (indexing starts at \u003cstrong\u003e1\u003c/strong\u003e). \n\nNegative indexing works here. Input \u003cstrong\u003e-1\u003c/strong\u003e for the last Page Path, \u003cstrong\u003e-2\u003c/strong\u003e for the second to last, etc.",
+    "help": "In this field, input the index of the page path level you would like to return (indexing starts at \u003cstrong\u003e1\u003c/strong\u003e). Check \u0027Use Inverted Indexing\u0027 to invert indexing.",
     "valueHint": "e.g. 1 or 2 or -1"
   },
   {
@@ -246,6 +246,6 @@ scenarios: []
 
 ___NOTES___
 
-Created on 2019-11-28 19:42:44
+Created on 2019-11-30 13:13:40
 
 
