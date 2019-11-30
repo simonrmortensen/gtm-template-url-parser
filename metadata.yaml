@@ -2,5 +2,5 @@ homepage: "https://iihnordic.com?utm_medium=referral&utm_source=gtm-templates&ut
 documentation: "https://github.com/simonrmortensen/gtm-template-url-parser"
 versions:
 # Old versions
-  - sha: b6b3893fafccaa56978f38729e5810cce4926f3d
+  - sha: e17acc5663e6a83a9903318cccef1da7c4ed86db
     changeNotes: Initial Release. 
