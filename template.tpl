@@ -152,10 +152,14 @@ const decodeUriComponent = require("decodeUriComponent");
 
 // Variables
 const url = data.inputURL;
+const urlIsValid = url.indexOf("http") == 0;
 const error = {
 	url: "Invalid URL Input"
 };
 
+if (!urlIsValid){
+	return error.url;
+}
 
 let protocol;
 let hostname;
@@ -164,37 +168,32 @@ let uri;
 let queries;
 let fragment;
 
-if(url.match("http") && url.match("http").index == 0) {
-    let urlComponents = [];
-    urlComponents.push(url.split("?")[0]);
-  	if (url.split("?").length > 1){
-    	urlComponents.push(url.split("?")[1].split("#")[0]);
-    } else {
-      	urlComponents.push("");
-    }
-    urlComponents.push(url.split("#")[1]);
-
-    let baseURL = urlComponents[0].split("/");
-    let hostnameComponents = baseURL[2].split(".");
-
-    protocol = baseURL[0].split(":")[0].toUpperCase();
-    hostname = baseURL[2];
-    rootHostname = hostnameComponents[hostnameComponents.length - 2] + "." + hostnameComponents[hostnameComponents.length - 1];
-    uri = [];
-    queries = urlComponents[1].split("&");
-    fragment = urlComponents[2];
-
-    for (var i = 3; i < baseURL.length; i++) {
-      	uri.push(baseURL[i]);
-    }
-    uri = uri.join("/");
-
+let urlComponents = [];
+urlComponents.push(url.split("?")[0]);
+if (url.split("?").length > 1){
+  urlComponents.push(url.split("?")[1].split("#")[0]);
 } else {
-	return error.url;
+  urlComponents.push("");
 }
+urlComponents.push(url.split("#")[1]);
+
+let baseURL = urlComponents[0].split("/");
+let hostnameComponents = baseURL[2].split(".");
+
+protocol = baseURL[0].split(":")[0].toUpperCase();
+hostname = baseURL[2];
+rootHostname = hostnameComponents[hostnameComponents.length - 2] + "." + hostnameComponents[hostnameComponents.length - 1];
+uri = [];
+queries = urlComponents[1].split("&");
+fragment = urlComponents[2];
+
+for (var i = 3; i < baseURL.length; i++) {
+  uri.push(baseURL[i]);
+}
+uri = uri.join("/");
 
 // Function returns the variable output selected by user
-function returnValue(){
+function getComponent(){
 	switch(data.returnComponent){
       case "protocol": 
         return protocol;
@@ -231,11 +230,12 @@ function returnValue(){
 }
 
 // Variables must return a value.
+const selectedComponent = getComponent();
 
-if (data.uriDecode && returnValue()){
-	return decodeUriComponent(returnValue());
+if (data.uriDecode && selectedComponent){
+	return decodeUriComponent(selectedComponent);
 } else {
-	return returnValue();
+	return selectedComponent;
 }
 
 
@@ -246,6 +246,6 @@ scenarios: []
 
 ___NOTES___
 
-Created on 2019-11-30 13:13:40
+Created on 03/12/2019, 09:47:38
 
 
