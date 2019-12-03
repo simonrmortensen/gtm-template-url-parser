@@ -112,7 +112,7 @@ ___TEMPLATE_PARAMETERS___
       }
     ],
     "help": "In this field, input the index of the page path level you would like to return (indexing starts at \u003cstrong\u003e1\u003c/strong\u003e). Check \u0027Use Inverted Indexing\u0027 to invert indexing.",
-    "valueHint": "e.g. 1 or 2 or -1"
+    "valueHint": "e.g. 1, 2 or 3 etc."
   },
   {
     "type": "TEXT",
@@ -247,6 +247,6 @@ scenarios: []
 
 ___NOTES___
 
-Created on 03/12/2019, 09:47:38
+Created on 03/12/2019, 10:03:18
 
 
