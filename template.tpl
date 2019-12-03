@@ -49,7 +49,7 @@ ___TEMPLATE_PARAMETERS___
       },
       {
         "value": "rootHostname",
-        "displayValue": "Root Hostname"
+        "displayValue": "Root Hostname (Hostname without subdomains)"
       },
       {
         "value": "uri",
@@ -62,6 +62,10 @@ ___TEMPLATE_PARAMETERS___
       {
         "value": "fragment",
         "displayValue": "Fragment"
+      },
+      {
+        "value": "baseURL",
+        "displayValue": "Base URL (URL without query parameters and fragments)"
       }
     ],
     "simpleValueType": true
@@ -170,13 +174,26 @@ let fragment;
 
 // Assignment of each components various values
 let urlComponents = [];
-urlComponents.push(url.split("?")[0]);
-if (url.split("?").length > 1){
-  urlComponents.push(url.split("?")[1].split("#")[0]);
+let urlHasQueries = url.indexOf("?") != -1;
+let urlHasFragment = url.indexOf("#") != -1;
+
+if (urlHasQueries && urlHasFragment){
+    urlComponents.push(url.substring(0, url.indexOf("?")));
+    urlComponents.push(url.substring(url.indexOf("?") + 1, url.indexOf("#")));
+    urlComponents.push(url.substring(url.indexOf("#") + 1));
+} else if (!urlHasQueries && urlHasFragment){
+	urlComponents.push(url.substring(0, url.indexOf("#")));
+  	urlComponents.push("");
+  	urlComponents.push(url.substring(url.indexOf("#") + 1));
+} else if (urlHasQueries && !urlHasFragment){
+    urlComponents.push(url.substring(0, url.indexOf("?")));
+  	urlComponents.push(url.substring(url.indexOf("?") + 1));
+  	urlComponents.push("");
 } else {
-  urlComponents.push("");
+	urlComponents.push(url);
+	urlComponents.push("");
+	urlComponents.push("");
 }
-urlComponents.push(url.split("#")[1]);
 
 let baseURL = urlComponents[0].split("/");
 let hostnameComponents = baseURL[2].split(".");
@@ -227,6 +244,8 @@ function getComponent(){
         break;
       case "fragment":
         return fragment;
+      case "baseURL":
+        return baseURL.join("/");
     }
 }
 
@@ -247,6 +266,6 @@ scenarios: []
 
 ___NOTES___
 
-Created on 03/12/2019, 10:03:18
+Created on 2019-12-03 19:04:44
 
 
