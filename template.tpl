@@ -168,6 +168,7 @@ let uri;
 let queries;
 let fragment;
 
+// Assignment of each components various values
 let urlComponents = [];
 urlComponents.push(url.split("?")[0]);
 if (url.split("?").length > 1){
