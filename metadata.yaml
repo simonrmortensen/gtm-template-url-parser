@@ -2,9 +2,12 @@ homepage: "https://iihnordic.com?utm_medium=referral&utm_source=gtm-templates&ut
 documentation: "https://github.com/simonrmortensen/gtm-template-url-parser"
 versions:
 # Current version
+  - sha: 3cc1a2d80b02bdb0467e57835d715f3f8865311f
+    changeNotes: Add BaseURL option to template + Code refactoring
+    
+# Old versions
   - sha: 5fc9162d55bd62406359bf57a88d6718999035a3
     changeNotes: Code refactoring
     
-# Old versions
   - sha: e17acc5663e6a83a9903318cccef1da7c4ed86db
     changeNotes: Initial Release. 
