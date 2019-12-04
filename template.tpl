@@ -18,7 +18,7 @@ ___INFO___
   "containerContexts": [
     "WEB"
   ], 
-  categories: ["UTILITY"]
+  "categories": ["UTILITY"]
 }
 
 
@@ -153,6 +153,7 @@ ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 
 // Enter your template code here.
 const decodeUriComponent = require("decodeUriComponent");
+//const log = require("logToConsole");
 
 // Variables
 const url = data.inputURL;
@@ -206,7 +207,9 @@ queries = urlComponents[1].split("&");
 fragment = urlComponents[2];
 
 for (var i = 3; i < baseURL.length; i++) {
-  uri.push(baseURL[i]);
+  	if(baseURL[i]){
+  		uri.push(baseURL[i]);
+	}
 }
 uri = uri.join("/");
 
@@ -266,6 +269,6 @@ scenarios: []
 
 ___NOTES___
 
-Created on 2019-12-03 19:04:44
+Created on 04/12/2019, 10:45:23
 
 
