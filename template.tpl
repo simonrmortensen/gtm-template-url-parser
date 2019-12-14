@@ -152,31 +152,24 @@ ___TEMPLATE_PARAMETERS___
 ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 
 // Enter your template code here.
-const decodeUriComponent = require("decodeUriComponent");
+const decode = require("decodeUriComponent");
 //const log = require("logToConsole");
 
-// Variables
+// Pre-checks and work
 const url = data.inputURL;
 const urlIsValid = url.indexOf("http") == 0;
 const error = {
-	url: "Invalid URL Input"
+	input: "Invalid URL Input"
 };
 
 if (!urlIsValid){
-	return error.url;
+	return error.input;
 }
 
-let protocol;
-let hostname;
-let rootHostname;
-let uri;
-let queries;
-let fragment;
-
-// Assignment of each components various values
+// Initial breakdown of the URL
 let urlComponents = [];
-let urlHasQueries = url.indexOf("?") != -1;
-let urlHasFragment = url.indexOf("#") != -1;
+const urlHasQueries = url.indexOf("?") != -1;
+const urlHasFragment = url.indexOf("#") != -1;
 
 if (urlHasQueries && urlHasFragment){
     urlComponents.push(url.substring(0, url.indexOf("?")));
@@ -196,55 +189,40 @@ if (urlHasQueries && urlHasFragment){
 	urlComponents.push("");
 }
 
-let baseURL = urlComponents[0].split("/");
-let hostnameComponents = baseURL[2].split(".");
+const baseURL = urlComponents[0].split("/");
+const hostnameComponents = baseURL[2].split(".");
 
-protocol = baseURL[0].split(":")[0].toUpperCase();
-hostname = baseURL[2];
-rootHostname = hostnameComponents[hostnameComponents.length - 2] + "." + hostnameComponents[hostnameComponents.length - 1];
-uri = [];
-queries = urlComponents[1].split("&");
-fragment = urlComponents[2];
+// Assignment of each components various values
+const protocol = baseURL[0];
+const hostname = baseURL[2];
+let rootHostname = hostnameComponents.slice(hostnameComponents.length - 2).join(".");
+const uri = baseURL.filter(x => x).slice(2);
+const queries = urlComponents[1];
+const fragment = urlComponents[2];
 
-for (var i = 3; i < baseURL.length; i++) {
-  	if(baseURL[i]){
-  		uri.push(baseURL[i]);
-	}
+if (rootHostname == "co.uk") {
+	rootHostname = hostnameComponents.slice(hostnameComponents.length - 3).join(".");
 }
-uri = uri.join("/");
 
 // Function returns the variable output selected by user
 function getComponent(){
 	switch(data.returnComponent){
       case "protocol": 
-        return protocol;
+        return protocol.split(":")[0].toUpperCase();
       case "hostname":
         return hostname;
       case "rootHostname":
         return rootHostname;
       case "uri":
         if (data.returnUriIndex){
-          	let uriComponents = uri.split("/");
-        	
-          	if (data.inverseIndex){
-              	return uriComponents[uriComponents.length - data.uriIndex];
-            } else {
-            	return uriComponents[data.uriIndex - 1];
-            }
+        	return data.inverseIndex ? uri[uri.length - data.uriIndex] : uri[data.uriIndex - 1];
         } else {
-        	return uri;
+        	return uri.join("/");
         }
         break;
       case "queryParam":
-        for (var i = 0; i < queries.length; i++) {
-          	let key = queries[i].split("=")[0];
-          	let value = queries[i].split("=")[1];
-
-			if (key == data.returnQueryKey){
-            	return value;
-            }
-		}
-        break;
+        const keyExists = queries.split(data.returnQueryKey + "=")[1];
+        return keyExists ? keyExists.split("&")[0] : undefined;
       case "fragment":
         return fragment;
       case "baseURL":
@@ -254,12 +232,7 @@ function getComponent(){
 
 // Variables must return a value.
 const selectedComponent = getComponent();
-
-if (data.uriDecode && selectedComponent){
-	return decodeUriComponent(selectedComponent);
-} else {
-	return selectedComponent;
-}
+return data.uriDecode && selectedComponent ? decode(selectedComponent) : selectedComponent;
 
 
 ___TESTS___
