@@ -2,10 +2,13 @@ homepage: "https://www.linkedin.com/in/simonrmortensen/"
 documentation: "https://github.com/simonrmortensen/gtm-template-url-parser"
 versions:
 # Current version
+  - sha: 4bd3b1ca99fe0911587ed437cbbe7feaac425b7c
+    changeNotes: Code refactoring and optimization. 
+    
+# Old versions
   - sha: 6c951020a200eddfaf336603eb9c2285f295195a
     changeNotes: Bug fix.
     
-# Old versions
   - sha: 3cc1a2d80b02bdb0467e57835d715f3f8865311f
     changeNotes: Add BaseURL option to template + Code refactoring
 
