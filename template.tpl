@@ -163,7 +163,7 @@ const error = {
 };
 
 if (!urlIsValid){
-	return error.input;
+	return undefined;
 }
 
 // Initial breakdown of the URL
