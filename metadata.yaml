@@ -2,10 +2,13 @@ homepage: "https://www.linkedin.com/in/simonrmortensen/"
 documentation: "https://github.com/simonrmortensen/gtm-template-url-parser"
 versions:
 # Current version
+  - sha: 3a58e8fc8e7d3fe9f01083de5b22053dfb08a879
+    changeNotes: Change error output to 'undefined'.
+    
+# Old versions
   - sha: 4bd3b1ca99fe0911587ed437cbbe7feaac425b7c
     changeNotes: Code refactoring and optimization. 
     
-# Old versions
   - sha: 6c951020a200eddfaf336603eb9c2285f295195a
     changeNotes: Bug fix.
     
