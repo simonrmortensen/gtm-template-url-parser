@@ -153,86 +153,57 @@ ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 
 // Enter your template code here.
 const decode = require("decodeUriComponent");
-//const log = require("logToConsole");
+// const print = require("logToConsole");
+// const makeNumber = require("makeNumber");
 
 // Pre-checks and work
 const url = data.inputURL;
-const urlIsValid = url.indexOf("http") == 0;
-const error = {
-	input: "Invalid URL Input"
-};
 
-if (!urlIsValid){
-	return undefined;
-}
+const urlIsValid = url.indexOf("http") === 0;
+if (!urlIsValid){ return undefined; }
 
 // Initial breakdown of the URL
-let urlComponents = [];
-const urlHasQueries = url.indexOf("?") != -1;
-const urlHasFragment = url.indexOf("#") != -1;
 
-if (urlHasQueries && urlHasFragment){
-    urlComponents.push(url.substring(0, url.indexOf("?")));
-    urlComponents.push(url.substring(url.indexOf("?") + 1, url.indexOf("#")));
-    urlComponents.push(url.substring(url.indexOf("#") + 1));
-} else if (!urlHasQueries && urlHasFragment){
-	urlComponents.push(url.substring(0, url.indexOf("#")));
-  	urlComponents.push("");
-  	urlComponents.push(url.substring(url.indexOf("#") + 1));
-} else if (urlHasQueries && !urlHasFragment){
-    urlComponents.push(url.substring(0, url.indexOf("?")));
-  	urlComponents.push(url.substring(url.indexOf("?") + 1));
-  	urlComponents.push("");
-} else {
-	urlComponents.push(url);
-	urlComponents.push("");
-	urlComponents.push("");
+const urlComponents = (() => {
+  const comps = {};
+  
+  const fragmentIndex = url.indexOf("#") === -1 ? url.length : url.indexOf("#");
+  const queriesIndex = url.indexOf("?") === -1 ? fragmentIndex : url.indexOf("?");
+  
+  comps.baseURL = url.slice(0, queriesIndex);
+  comps.queries = url.slice(queriesIndex, fragmentIndex);
+  comps.fragment = url.slice(fragmentIndex, url.length);
+  
+  return comps;
+})();
+
+const parsedURL = {};
+parsedURL.protocol = urlComponents.baseURL.slice(0, urlComponents.baseURL.indexOf(":")).toUpperCase();
+parsedURL.hostname = urlComponents.baseURL.split("/").filter(x => x)[1];
+parsedURL.rootHostname = parsedURL.hostname.split(".").slice(parsedURL.hostname.split(".").length - 2).join(".");
+parsedURL.uri = uri(data.uriIndex, data.inverseIndex);
+parsedURL.queryParam = data.returnObjectified ? objectify(urlComponents.queries) : objectify(urlComponents.queries)[data.returnQueryKey];
+parsedURL.fragment = urlComponents.fragment.slice(1);
+parsedURL.baseURL = urlComponents.baseURL;
+
+// Variable myst return a value
+return parsedURL[data.returnComponent];
+
+// Helper functions
+function objectify(keyValuePairs) {
+  return keyValuePairs.slice(1).split("&").reduce((agg, current) => {
+    const pair = current.split("=");
+    agg[pair[0]] = pair[1];
+    return agg;
+  }, {});
 }
 
-const baseURL = urlComponents[0].split("/");
-const hostnameComponents = baseURL[2].split(".");
-
-// Assignment of each components various values
-const protocol = baseURL[0];
-const hostname = baseURL[2];
-let rootHostname = hostnameComponents.slice(hostnameComponents.length - 2).join(".");
-const uri = baseURL.filter(x => x).slice(2);
-const queries = urlComponents[1];
-const fragment = urlComponents[2];
-
-if (rootHostname == "co.uk") {
-	rootHostname = hostnameComponents.slice(hostnameComponents.length - 3).join(".");
+function uri(findByIndex, inverted) {
+  const uriSections = urlComponents.baseURL.split("/").filter(x => x).slice(2);
+  const index = inverted === true ? (uriSections.length - findByIndex) : (findByIndex - 1);
+  
+  return data.returnUriIndex ? uriSections[index] : ("/" + uriSections.join("/") + "/");
 }
-
-// Function returns the variable output selected by user
-function getComponent(){
-	switch(data.returnComponent){
-      case "protocol": 
-        return protocol.split(":")[0].toUpperCase();
-      case "hostname":
-        return hostname;
-      case "rootHostname":
-        return rootHostname;
-      case "uri":
-        if (data.returnUriIndex){
-        	return data.inverseIndex ? uri[uri.length - data.uriIndex] : uri[data.uriIndex - 1];
-        } else {
-        	return uri.join("/");
-        }
-        break;
-      case "queryParam":
-        const keyExists = queries.split(data.returnQueryKey + "=")[1];
-        return keyExists ? keyExists.split("&")[0] : undefined;
-      case "fragment":
-        return fragment;
-      case "baseURL":
-        return baseURL.join("/");
-    }
-}
-
-// Variables must return a value.
-const selectedComponent = getComponent();
-return data.uriDecode && selectedComponent ? decode(selectedComponent) : selectedComponent;
 
 
 ___TESTS___
